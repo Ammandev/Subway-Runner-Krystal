@@ -40,7 +40,7 @@ function App() {
   // Function to send the data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded && telegramUserData) {
-      const userName = telegramUserData.username || `${telegramUserData.first_name} ${telegramUserData.last_name || ''}`;
+      const userName = `${telegramUserData.first_name} ${telegramUserData.last_name || ''}`;
       const userId = telegramUserData.id.toString();
       sendMessage("Data", "SetUsername", `${userId},${userName}`);
     }
