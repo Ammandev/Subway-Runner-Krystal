@@ -43,6 +43,7 @@ function App() {
       const userName = `${telegramUserData.first_name} ${telegramUserData.last_name || ''}`;
       const userId = telegramUserData.id.toString();
       sendMessage("Data", "SetUsername", `${userId},${userName}`);
+      sendMessage("Data", "SetSwipe", "25");
     }
   }, [isLoaded, sendMessage, telegramUserData]);
 
