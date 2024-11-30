@@ -40,7 +40,7 @@ function App() {
   // Function to send the data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded && telegramInitData) {
-      const userDataString = encodeURIComponent(telegramInitData); // Convert user data to string
+      const userDataString = decodeURIComponent((telegramInitData)); // Convert user data to string
       console.log(userDataString);
       sendMessage("Data", "SetInitData", userDataString);
       sendMessage("Data", "SetSwipe", "25");
