@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 declare global {
   interface Window {
     hideLoadingScreen?: () => void;
+    openstoreScreen?: () => void;
   }
 }
 
@@ -41,6 +42,7 @@ function App() {
      // sendMessage("Data", "SetInitData", userDataString);
       sendMessage("Data", "UseTestinitData");
      sendMessage("Data", "SetSwipe", "25");
+    // sendMessage("Data", "RefetchData");
     }
   }, [isLoaded, sendMessage]);
 
@@ -49,11 +51,16 @@ function App() {
     window.hideLoadingScreen = () => {
       sendTelegramDataToUnity();
     };
+    window.openstoreScreen = async () => {
 
+  };
     return () => {
       if (window.hideLoadingScreen) {
         delete window.hideLoadingScreen;
       }
+      if (window.openstoreScreen) {
+        delete window.openstoreScreen;
+    }
     };
   }, [sendTelegramDataToUnity]);
 
