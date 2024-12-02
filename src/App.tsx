@@ -42,8 +42,9 @@ function App() {
     if (isLoaded && telegramInitData) {
       const userDataString = decodeURIComponent((telegramInitData)); // Convert user data to string
       console.log(userDataString);
-      sendMessage("Data", "SetInitData", userDataString);
-      sendMessage("Data", "SetSwipe", "25");
+     // sendMessage("Data", "SetInitData", userDataString);
+      sendMessage("Data", "UseTestinitData");
+     sendMessage("Data", "SetSwipe", "25");
     }
   }, [isLoaded, sendMessage, telegramInitData]);
 
