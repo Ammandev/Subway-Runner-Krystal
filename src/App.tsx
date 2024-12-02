@@ -1,7 +1,7 @@
 import './App.css';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import { useEffect, useState, useCallback } from "react";
-import useTelegramInitData from './useTelegramUserData'; // Import the custom hook to get Telegram data
+import useTelegramUserData from './useTelegramUserData'; // Import the custom hook to get Telegram data
 
 // Extend the Window interface to include hideLoadingScreen as optional
 declare global {
@@ -23,7 +23,7 @@ function App() {
     height: window.innerHeight,
   });
 
-  const telegramInitData = useTelegramInitData(); // Use the hook to get initData
+  const telegramUserData = useTelegramUserData(); // Use the hook to get the actual Telegram user data
 
   useEffect(() => {
     function handleResize() {
@@ -39,14 +39,15 @@ function App() {
 
   // Function to send the data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
-    if (isLoaded && telegramInitData) {
-      const userDataString = decodeURIComponent((telegramInitData)); // Convert user data to string
-      console.log(userDataString);
-     // sendMessage("Data", "SetInitData", userDataString);
+    if (isLoaded && telegramUserData) {
+     // const userName = `${telegramUserData.first_name} ${telegramUserData.last_name || ''}`;
+     // const userId = telegramUserData.id.toString();
       sendMessage("Data", "UseTestinitData");
-     sendMessage("Data", "SetSwipe", "25");
+     
+      // sendMessage("Data", "SetUsername", `${userId},${userName}`);
+      sendMessage("Data", "SetSwipe", "25");
     }
-  }, [isLoaded, sendMessage, telegramInitData]);
+  }, [isLoaded, sendMessage, telegramUserData]);
 
   useEffect(() => {
     // Define the hideLoadingScreen function

@@ -1,15 +1,14 @@
 {
-  "name": "Subway-Runner-Kystal",
+  "name": "Telegram-Mini-App",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
-  "dev": "vite",
-  "build": "tsc -b && vite build",
-  "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-  "preview": "vite preview --host 0.0.0.0 --port $PORT"
-}
-,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@twa-dev/sdk": "^7.10.1",
     "react": "^18.3.1",
