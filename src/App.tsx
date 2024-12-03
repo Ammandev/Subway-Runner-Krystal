@@ -20,7 +20,7 @@ function App() {
 
   const [isHighQuality, setIsHighQuality] = useState(true); // Manage quality
 
-  // Adjust canvas size and resolution dynamically
+  // Function to dynamically adjust canvas size and resolution
   const adjustCanvasResolution = useCallback(() => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
@@ -28,20 +28,24 @@ function App() {
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      // Set internal resolution
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      // Set internal resolution (high DPI for sharp rendering)
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
 
-      // Set visible size to match screen
+      // Set visible size to match screen dimensions
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
+
+      console.log(
+        `Canvas adjusted: Internal resolution (${canvas.width}x${canvas.height}), Visible size (${width}px x ${height}px)`
+      );
     }
   }, [isHighQuality]);
 
-  // Handle screen resizing
+  // Adjust resolution on window resize
   useEffect(() => {
     const handleResize = () => {
-      adjustCanvasResolution(); // Adjust resolution on resize
+      adjustCanvasResolution();
     };
 
     handleResize(); // Initial adjustment
@@ -49,7 +53,7 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, [adjustCanvasResolution]);
 
-  // Function to toggle quality
+  // Toggle between high and low quality
   const toggleQuality = () => {
     setIsHighQuality((prev) => !prev);
     adjustCanvasResolution(); // Update resolution immediately
@@ -63,18 +67,18 @@ function App() {
     }
   }, [isLoaded, sendMessage]);
 
-  // Set canvas resolution on load
+  // Adjust resolution on initial load
   useEffect(() => {
-    adjustCanvasResolution(); // Ensure initial adjustment
+    adjustCanvasResolution();
   }, [adjustCanvasResolution]);
 
-  // Define global functions
+  // Define global functions for interaction
   useEffect(() => {
     window.hideLoadingScreen = () => {
       sendTelegramDataToUnity();
     };
     window.openstoreScreen = async () => {
-      // Future implementation
+      // Placeholder for future implementation
     };
     return () => {
       delete window.hideLoadingScreen;
@@ -86,12 +90,12 @@ function App() {
     <div className="App">
       <Unity
         style={{
-          width: "100%", // Always stretch to full screen size
+          width: "100%", // Match screen size
           height: "100%",
         }}
         unityProvider={unityProvider}
       />
-      {/* Button to toggle quality */}
+      {/* Quality Toggle Button */}
       <button
         onClick={toggleQuality}
         style={{
