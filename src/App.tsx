@@ -77,7 +77,6 @@ function App() {
   useEffect(() => {
     adjustCanvasResolution();
   }, [adjustCanvasResolution]);
-
   // Define global functions for interaction
   useEffect(() => {
     window.hideLoadingScreen = () => {
