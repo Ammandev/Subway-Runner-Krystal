@@ -18,13 +18,13 @@ function App() {
     codeUrl: "build/Webgl.wasm",
   });
 
-  const [isHighQuality, setIsHighQuality] = useState(true); // State to manage quality
+  const [isHighQuality, setIsHighQuality] = useState(true); // Manage quality
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
 
-  // Handle resizing to maintain proper scaling
+  // Handle resizing and maintain proper scaling
   useEffect(() => {
     function handleResize() {
       setWindowDimensions({
@@ -32,7 +32,7 @@ function App() {
         height: window.innerHeight,
       });
 
-      adjustCanvasResolution(isHighQuality); // Update canvas resolution on resize
+      adjustCanvasResolution(isHighQuality); // Update canvas resolution
     }
 
     handleResize(); // Set initial dimensions
@@ -40,14 +40,14 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isHighQuality]);
 
-  // Function to adjust canvas resolution dynamically
+  // Adjust internal resolution dynamically
   const adjustCanvasResolution = useCallback((highQuality: boolean) => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
-      const dpr = highQuality ? window.devicePixelRatio || 1 : 1; // High quality uses DPR
-      canvas.width = window.innerWidth * dpr;
+      const dpr = highQuality ? window.devicePixelRatio || 1 : 1; // Adjust based on quality
+      canvas.width = window.innerWidth * dpr; // Internal resolution
       canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.width = `${window.innerWidth}px`; // Screen size
       canvas.style.height = `${window.innerHeight}px`;
     }
   }, []);
@@ -55,10 +55,10 @@ function App() {
   // Function to toggle quality
   const toggleQuality = () => {
     setIsHighQuality((prev) => !prev);
-    adjustCanvasResolution(!isHighQuality); // Adjust resolution based on the new quality setting
+    adjustCanvasResolution(!isHighQuality); // Adjust resolution immediately
   };
 
-  // Function to send data to Unity after the game is loaded
+  // Send data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded) {
       sendMessage("Data", "UseTestinitData");
@@ -66,13 +66,15 @@ function App() {
     }
   }, [isLoaded, sendMessage]);
 
+  // Set canvas resolution on load
   useEffect(() => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
-      adjustCanvasResolution(isHighQuality); // Set initial resolution
+      adjustCanvasResolution(isHighQuality);
     }
   }, [adjustCanvasResolution, isHighQuality]);
 
+  // Define global functions
   useEffect(() => {
     window.hideLoadingScreen = () => {
       sendTelegramDataToUnity();
@@ -90,7 +92,7 @@ function App() {
     <div className="App">
       <Unity
         style={{
-          width: `${windowDimensions.width}px`, // Match the physical screen size
+          width: `${windowDimensions.width}px`, // Keep physical screen size
           height: `${windowDimensions.height}px`,
         }}
         unityProvider={unityProvider}
