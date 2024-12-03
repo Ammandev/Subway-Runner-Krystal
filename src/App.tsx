@@ -25,7 +25,7 @@ function App() {
   
   useEffect(() => {
     function handleResize() {
-      const dpr = window.devicePixelRatio/2 || 1;
+      const dpr = window.devicePixelRatio/2.5 || 1;
       setWindowDimensions({
         width: window.innerWidth * dpr,
         height: window.innerHeight * dpr,
