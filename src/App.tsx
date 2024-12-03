@@ -18,9 +18,9 @@ function App() {
     codeUrl: "build/Webgl.wasm",
   });
 
-  const [isHighQuality, setIsHighQuality] = useState(true); // Manage quality
+  const [isHighQuality, setIsHighQuality] = useState(true);
 
-  // Function to dynamically adjust canvas size and resolution
+  // Adjust canvas size and resolution dynamically
   const adjustCanvasResolution = useCallback(() => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
@@ -36,13 +36,19 @@ function App() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
 
+      // Force WebGL to scale correctly
+      const gl = canvas.getContext("webgl");
+      if (gl) {
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+
       console.log(
         `Canvas adjusted: Internal resolution (${canvas.width}x${canvas.height}), Visible size (${width}px x ${height}px)`
       );
     }
   }, [isHighQuality]);
 
-  // Adjust resolution on window resize
+  // Handle screen resizing
   useEffect(() => {
     const handleResize = () => {
       adjustCanvasResolution();
