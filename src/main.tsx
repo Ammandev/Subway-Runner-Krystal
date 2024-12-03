@@ -18,6 +18,5 @@ function adjustCanvasResolution() {
     canvas.style.height = `${window.innerHeight}px`;
   }
 }
-
 window.addEventListener("resize", adjustCanvasResolution);
 window.addEventListener("DOMContentLoaded", adjustCanvasResolution);

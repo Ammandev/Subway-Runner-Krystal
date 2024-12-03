@@ -51,7 +51,7 @@ function App() {
       canvas.style.height = `${window.innerHeight}px`;
     }
   }, []);
-
+  
   // Function to toggle quality
   const toggleQuality = () => {
     setIsHighQuality((prev) => !prev);
