@@ -19,43 +19,34 @@ function App() {
   });
 
   const [isHighQuality, setIsHighQuality] = useState(true); // Manage quality
-  const [windowDimensions, setWindowDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
 
-  // Handle resizing and maintain proper scaling
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-
-      adjustCanvasResolution(isHighQuality); // Update canvas resolution
-    }
-
-    handleResize(); // Set initial dimensions
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [isHighQuality]);
-
-  // Adjust internal resolution dynamically
-  const adjustCanvasResolution = useCallback((highQuality: boolean) => {
+  // Adjust canvas size and resolution dynamically
+  const adjustCanvasResolution = useCallback(() => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
-      const dpr = highQuality ? window.devicePixelRatio || 1 : 1; // Adjust based on quality
+      const dpr = isHighQuality ? window.devicePixelRatio || 1 : 1; // High quality uses DPR
       canvas.width = window.innerWidth * dpr; // Internal resolution
       canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`; // Screen size
+      canvas.style.width = `${window.innerWidth}px`; // Visible size
       canvas.style.height = `${window.innerHeight}px`;
     }
-  }, []);
-  
+  }, [isHighQuality]);
+
+  // Handle screen resizing
+  useEffect(() => {
+    const handleResize = () => {
+      adjustCanvasResolution(); // Adjust resolution on resize
+    };
+
+    handleResize(); // Initial adjustment
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [adjustCanvasResolution]);
+
   // Function to toggle quality
   const toggleQuality = () => {
     setIsHighQuality((prev) => !prev);
-    adjustCanvasResolution(!isHighQuality); // Adjust resolution immediately
+    adjustCanvasResolution(); // Update resolution immediately
   };
 
   // Send data to Unity after the game is loaded
@@ -68,11 +59,8 @@ function App() {
 
   // Set canvas resolution on load
   useEffect(() => {
-    const canvas = document.querySelector("canvas");
-    if (canvas) {
-      adjustCanvasResolution(isHighQuality);
-    }
-  }, [adjustCanvasResolution, isHighQuality]);
+    adjustCanvasResolution(); // Ensure initial adjustment
+  }, [adjustCanvasResolution]);
 
   // Define global functions
   useEffect(() => {
@@ -92,8 +80,8 @@ function App() {
     <div className="App">
       <Unity
         style={{
-          width: `${windowDimensions.width}px`, // Keep physical screen size
-          height: `${windowDimensions.height}px`,
+          width: "100%", // Always stretch to full screen size
+          height: "100%",
         }}
         unityProvider={unityProvider}
       />
