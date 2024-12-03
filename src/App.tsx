@@ -19,23 +19,26 @@ function App() {
   });
 
   const [windowDimensions, setWindowDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: window.innerWidth * (window.devicePixelRatio || 1),
+    height: window.innerHeight * (window.devicePixelRatio || 1),
   });
-
-
+  
   useEffect(() => {
     function handleResize() {
+      const dpr = window.devicePixelRatio || 1; // Ensure high DPI support
       setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: window.innerWidth * dpr,
+        height: window.innerHeight * dpr,
       });
     }
-
+  
+    handleResize(); // Set initial dimensions
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  
+  
+  
   // Function to send the data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded) {
@@ -66,13 +69,14 @@ function App() {
 
   return (
     <div className="App">
-      <Unity
-        style={{
-          width: `${windowDimensions.width}px`,
-          height: `${windowDimensions.height}px`,
-        }}
-        unityProvider={unityProvider}
-      />
+<Unity
+  style={{
+    width: `${windowDimensions.width}px`,
+    height: `${windowDimensions.height}px`,
+  }}
+  unityProvider={unityProvider}
+/>
+
     </div>
   );
 }
