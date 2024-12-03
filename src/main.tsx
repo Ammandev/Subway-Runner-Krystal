@@ -21,3 +21,4 @@ function adjustCanvasResolution() {
 window.addEventListener("resize", adjustCanvasResolution);
 window.addEventListener("DOMContentLoaded", adjustCanvasResolution);
 
+

@@ -25,10 +25,16 @@ function App() {
     const canvas = document.querySelector("canvas");
     if (canvas) {
       const dpr = isHighQuality ? window.devicePixelRatio || 1 : 1; // High quality uses DPR
-      canvas.width = window.innerWidth * dpr; // Internal resolution
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`; // Visible size
-      canvas.style.height = `${window.innerHeight}px`;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      // Set internal resolution
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+
+      // Set visible size to match screen
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
     }
   }, [isHighQuality]);
 
