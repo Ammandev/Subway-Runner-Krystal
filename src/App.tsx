@@ -2,6 +2,7 @@ import './App.css';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import { useEffect, useState, useCallback } from "react";
 
+// Extend the Window interface to include hideLoadingScreen as optional
 declare global {
   interface Window {
     hideLoadingScreen?: () => void;
@@ -22,69 +23,31 @@ function App() {
     height: window.innerHeight,
   });
 
-  const [isHighQuality, setIsHighQuality] = useState(true);
+  // Handle resizing to maintain proper scaling
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
 
-  const handleResize = useCallback(() => {
-    const canvas = document.querySelector("canvas");
-    if (canvas) {
-      const dpr = isHighQuality ? window.devicePixelRatio || 1 : 1;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
-      const gl = canvas.getContext("webgl") || canvas.getContext("webgl2");
-      if (gl) {
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      } else {
-        console.error("WebGL context not available.");
+      // Adjust canvas resolution dynamically
+      const canvas = document.querySelector("canvas");
+      if (canvas) {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr; // Internal resolution
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = `${window.innerWidth}px`; // Physical screen size
+        canvas.style.height = `${window.innerHeight}px`;
       }
-
-      console.log(
-        `Canvas resized: Internal resolution (${canvas.width}x${canvas.height}), Visible size (${width}px x ${height}px)`
-      );
     }
 
-    setWindowDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-  }, [isHighQuality]);
-
-  useEffect(() => {
-    handleResize();
+    handleResize(); // Set initial dimensions
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [handleResize]);
-
-  useEffect(() => {
-    const canvas = document.querySelector("canvas");
-
-    function handleContextLost(event: Event) {
-      event.preventDefault();
-      console.error("WebGL context lost! Attempting to restore...");
-    }
-
-    function handleContextRestored() {
-      console.info("WebGL context restored.");
-    }
-
-    if (canvas) {
-      canvas.addEventListener("webglcontextlost", handleContextLost);
-      canvas.addEventListener("webglcontextrestored", handleContextRestored);
-    }
-
-    return () => {
-      if (canvas) {
-        canvas.removeEventListener("webglcontextlost", handleContextLost);
-        canvas.removeEventListener("webglcontextrestored", handleContextRestored);
-      }
-    };
   }, []);
 
+  // Function to send data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded) {
       sendMessage("Data", "UseTestinitData");
@@ -92,11 +55,26 @@ function App() {
     }
   }, [isLoaded, sendMessage]);
 
+  // Set up canvas resolution on load
+  useEffect(() => {
+    const canvas = document.querySelector("canvas");
+    if (canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+    }
+  }, []);
+
+  // Define global functions for the window object
   useEffect(() => {
     window.hideLoadingScreen = () => {
       sendTelegramDataToUnity();
     };
-    window.openstoreScreen = async () => {};
+    window.openstoreScreen = async () => {
+      // Future implementation
+    };
     return () => {
       delete window.hideLoadingScreen;
       delete window.openstoreScreen;
@@ -107,31 +85,11 @@ function App() {
     <div className="App">
       <Unity
         style={{
-          width: `${windowDimensions.width}px`,
+          width: `${windowDimensions.width}px`, // Match the physical screen size
           height: `${windowDimensions.height}px`,
         }}
         unityProvider={unityProvider}
       />
-      <button
-        onClick={() => {
-          setIsHighQuality((prev) => !prev);
-          handleResize();
-        }}
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          zIndex: 1000,
-          padding: "10px 20px",
-          backgroundColor: "blue",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Toggle Quality ({isHighQuality ? "High" : "Low"})
-      </button>
     </div>
   );
 }
