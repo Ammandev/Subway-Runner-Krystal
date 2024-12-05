@@ -9,12 +9,29 @@
       html, body, #root {
         height: 100%;
         margin: 0;
-        overflow: hidden; /* Add this to prevent scrolling */
+        overflow: hidden; /* Prevent scrolling */
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.addEventListener("resize", () => {
+        const canvas = document.querySelector("canvas");
+        if (canvas) {
+          const dpr = window.devicePixelRatio || 1;
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          canvas.style.width = `${window.innerWidth}px`;
+          canvas.style.height = `${window.innerHeight}px`;
+
+          const gl = canvas.getContext("webgl");
+          if (gl) {
+            gl.viewport(0, 0, canvas.width, canvas.height);
+          }
+        }
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

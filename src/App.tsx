@@ -24,20 +24,24 @@ function App() {
 
   const [isHighQuality, setIsHighQuality] = useState(true);
 
+  // Function to resize the canvas dynamically
   const handleResize = useCallback(() => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
-      const dpr = isHighQuality ? window.devicePixelRatio || 1 : 1;
+      const dpr = isHighQuality ? window.devicePixelRatio || 1 : 1; // Set DPR for high/low quality
       const width = window.innerWidth;
       const height = window.innerHeight;
 
+      // Set internal resolution for high-quality rendering
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
 
+      // Set visible dimensions
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
 
-      const gl = canvas.getContext("webgl") as WebGLRenderingContext | null;
+      // Update WebGL viewport
+      const gl = canvas.getContext("webgl") || canvas.getContext("webgl2");
       if (gl) {
         gl.viewport(0, 0, canvas.width, canvas.height);
       } else {
@@ -49,18 +53,21 @@ function App() {
       );
     }
 
+    // Update window dimensions for Unity container
     setWindowDimensions({
       width: window.innerWidth,
       height: window.innerHeight,
     });
   }, [isHighQuality]);
 
+  // Add event listener for resize
   useEffect(() => {
-    handleResize();
+    handleResize(); // Ensure the canvas is resized on load
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [handleResize]);
 
+  // Send initial data to Unity
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded) {
       sendMessage("Data", "UseTestinitData");
@@ -68,12 +75,13 @@ function App() {
     }
   }, [isLoaded, sendMessage]);
 
+  // Define global functions for Unity interaction
   useEffect(() => {
     window.hideLoadingScreen = () => {
       sendTelegramDataToUnity();
     };
     window.openstoreScreen = async () => {
-      // Placeholder
+      // Placeholder for opening store screen
     };
     return () => {
       delete window.hideLoadingScreen;
@@ -90,8 +98,12 @@ function App() {
         }}
         unityProvider={unityProvider}
       />
+      {/* Button to toggle between high and low quality */}
       <button
-        onClick={() => setIsHighQuality((prev) => !prev)}
+        onClick={() => {
+          setIsHighQuality((prev) => !prev);
+          handleResize(); // Update the resolution on toggle
+        }}
         style={{
           position: "absolute",
           top: "10px",
