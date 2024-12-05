@@ -2,7 +2,6 @@ import './App.css';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import { useEffect, useState, useCallback } from "react";
 
-// Extend the Window interface to include hideLoadingScreen as optional
 declare global {
   interface Window {
     hideLoadingScreen?: () => void;
@@ -23,26 +22,26 @@ function App() {
     height: window.innerHeight,
   });
 
-  // Resize handler to dynamically adjust canvas resolution
-  function handleResize() {
+  const [isHighQuality, setIsHighQuality] = useState(true);
+
+  const handleResize = useCallback(() => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = isHighQuality ? window.devicePixelRatio || 1 : 1;
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      // Set internal resolution
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
 
-      // Set visible size
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
 
-      // Adjust WebGL viewport
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl") as WebGLRenderingContext | null;
       if (gl) {
         gl.viewport(0, 0, canvas.width, canvas.height);
+      } else {
+        console.error("WebGL context not available.");
       }
 
       console.log(
@@ -54,15 +53,14 @@ function App() {
       width: window.innerWidth,
       height: window.innerHeight,
     });
-  }
+  }, [isHighQuality]);
 
   useEffect(() => {
-    handleResize(); // Set dimensions on load
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [handleResize]);
 
-  // Send data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded) {
       sendMessage("Data", "UseTestinitData");
@@ -70,13 +68,12 @@ function App() {
     }
   }, [isLoaded, sendMessage]);
 
-  // Define global functions for interaction
   useEffect(() => {
     window.hideLoadingScreen = () => {
       sendTelegramDataToUnity();
     };
     window.openstoreScreen = async () => {
-      // Placeholder for future implementation
+      // Placeholder
     };
     return () => {
       delete window.hideLoadingScreen;
@@ -93,6 +90,23 @@ function App() {
         }}
         unityProvider={unityProvider}
       />
+      <button
+        onClick={() => setIsHighQuality((prev) => !prev)}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          zIndex: 1000,
+          padding: "10px 20px",
+          backgroundColor: "blue",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Toggle Quality ({isHighQuality ? "High" : "Low"})
+      </button>
     </div>
   );
 }
