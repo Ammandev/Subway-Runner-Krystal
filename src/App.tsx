@@ -19,16 +19,15 @@ function App() {
   });
 
   const [windowDimensions, setWindowDimensions] = useState({
-    width: window.innerWidth * (window.devicePixelRatio || 1),
-    height: window.innerHeight * (window.devicePixelRatio || 1),
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
   
   useEffect(() => {
     function handleResize() {
-      const dpr = window.devicePixelRatio/3 || 1;
       setWindowDimensions({
-        width: window.innerWidth * dpr,
-        height: window.innerHeight * dpr,
+        width: window.innerWidth,
+        height: window.innerHeight,
       });
     }
   
