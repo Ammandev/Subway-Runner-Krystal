@@ -16,10 +16,22 @@
   <body>
     <div id="root"></div>
     <script>
+      // Unity WebGL Configuration
+      const config = {
+        dataUrl: "Build/Webgl.data",
+        frameworkUrl: "Build/Webgl.framework.js",
+        codeUrl: "Build/Webgl.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Krystal",
+        productName: "Subway Runner",
+        productVersion: "1.0",
+        devicePixelRatio: 2, // Increase devicePixelRatio for higher quality
+      };
+
       window.addEventListener("resize", () => {
         const canvas = document.querySelector("canvas");
         if (canvas) {
-          const dpr = window.devicePixelRatio || 1;
+          const dpr = config.devicePixelRatio || window.devicePixelRatio || 1;
           canvas.width = window.innerWidth * dpr;
           canvas.height = window.innerHeight * dpr;
           canvas.style.width = `${window.innerWidth}px`;
@@ -31,6 +43,9 @@
           }
         }
       });
+
+      // Set canvas dimensions initially
+      window.dispatchEvent(new Event("resize"));
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
