@@ -22,20 +22,45 @@ function App() {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+
+  // Resize handler to dynamically adjust canvas resolution
+  function handleResize() {
+    const canvas = document.querySelector("canvas");
+    if (canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      // Set internal resolution
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+
+      // Set visible size
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      // Adjust WebGL viewport
+      const gl = canvas.getContext("webgl");
+      if (gl) {
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+
+      console.log(
+        `Canvas resized: Internal resolution (${canvas.width}x${canvas.height}), Visible size (${width}px x ${height}px)`
+      );
     }
-  
-    handleResize(); // Ensure initial dimensions are set correctly
+
+    setWindowDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }
+
+  useEffect(() => {
+    handleResize(); // Set dimensions on load
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
 
   // Send data to Unity after the game is loaded
   const sendTelegramDataToUnity = useCallback(() => {
@@ -45,7 +70,6 @@ function App() {
     }
   }, [isLoaded, sendMessage]);
 
-  // Adjust resolution on initial load
   // Define global functions for interaction
   useEffect(() => {
     window.hideLoadingScreen = () => {
@@ -62,14 +86,13 @@ function App() {
 
   return (
     <div className="App">
-<Unity
-  style={{
-    width: `${windowDimensions.width}px`,
-    height: `${windowDimensions.height}px`,
-  }}
-  unityProvider={unityProvider}
-/>
-
+      <Unity
+        style={{
+          width: `${windowDimensions.width}px`,
+          height: `${windowDimensions.height}px`,
+        }}
+        unityProvider={unityProvider}
+      />
     </div>
   );
 }
