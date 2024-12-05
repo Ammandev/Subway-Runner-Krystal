@@ -9,13 +9,30 @@
       html, body, #root {
         height: 100%;
         margin: 0;
-        overflow: hidden; /* Add this to prevent scrolling */
+        overflow: hidden; /* Prevent scrolling */
       }
     </style>
-    <script type="module" crossorigin src="/Subway-Runner-Krystal/assets/index-CTrzXQ6E.js"></script>
+    <script type="module" crossorigin src="/Subway-Runner-Krystal/assets/index-C6FVLSKU.js"></script>
     <link rel="stylesheet" crossorigin href="/Subway-Runner-Krystal/assets/index-DevElJGd.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.addEventListener("resize", () => {
+        const canvas = document.querySelector("canvas");
+        if (canvas) {
+          const dpr = window.devicePixelRatio || 1;
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          canvas.style.width = `${window.innerWidth}px`;
+          canvas.style.height = `${window.innerHeight}px`;
+
+          const gl = canvas.getContext("webgl");
+          if (gl) {
+            gl.viewport(0, 0, canvas.width, canvas.height);
+          }
+        }
+      });
+    </script>
   </body>
 </html>
