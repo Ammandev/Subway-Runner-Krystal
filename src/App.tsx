@@ -59,6 +59,7 @@ function App() {
   const sendTelegramDataToUnity = useCallback(() => {
     if (isLoaded) {
 console.log()
+     sendMessage("Data", "SetMusic","true");
 sendMessage("Data", "ApiUrl", "https://game.escapedurov.com/api");
 sendMessage("Data", "SetSwipe", "25");
     sendMessage("Data", "SetInitData","user=%7B%22id%22%3A185619248%2C%22first_name%22%3A%22%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9%22%2C%22last_name%22%3A%22%D0%9C%D0%B5%D1%82%D0%B5%D0%BD%D1%91%D0%B2%22%2C%22username%22%3A%22metenev%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2F3unAoV79ac9jdpHMb1mM4EmsmZux8giXZlDUE7q9tAE.svg%22%7D&chat_instance=3810165558475185912&chat_type=group&auth_date=1734350330&signature=asQ-K3ey_-krZf9JfPKtqIEJ_rGkjUcnI1MWD6W0CsYP-RgvZrMn6colOsvM7hxKaVBpZVbdoYz0_7FSz7oBBg&hash=2d7fe0b9f167aa6514cd11761aa7dc88fd2ca4a010ff5e5ab33d71614e255250");
@@ -66,9 +67,10 @@ sendMessage("Data", "SetSwipe", "25");
      // sendMessage("Data", "RefetchData");
      // sendMessage("Data", "PauseGame","true");
      // sendMessage("Data", "PauseGame","false");
-     sendMessage("Data", "SetMusic","true");
     // sendMessage("Data", "SetMusic","false");
      sendMessage("Data", "SetSfx","true");
+     sendMessage("Data", "SetQuality","0");//low Quality
+     sendMessage("Data", "SetQuality","1");//High Quality
     // sendMessage("Data", "SetSfx","false");
   
     }
